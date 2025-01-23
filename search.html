@@ -7,10 +7,31 @@
     <meta name="author" content="Lee Goddard <cv@lee.goddards.space>">
     <link rel="shortcut icon" href="icon.ico">
 
-    <title>Izel Map Selector Web Component</title>
+    <title>US County Selector Web Component</title>
 
     <!-- Include the Web Component Script -->
     <script src="us-county-select.js" defer></script>
+
+    <!-- An example of listening to the component: -->
+    <script defer>
+        const changeHandler = (event) => {
+            // Each event adds a new log line exposing its details:
+            const logLine = document.createElement('div');
+            logLine.innerHTML = `<xmp>${JSON.stringify(event.detail, null, 4)}</xmp>`;
+            document.getElementById('log').prepend(logLine);
+            alert(
+                event.detail.properties.NAME + ' ' + event.detail.properties.LSAD
+                + ' is ' + (!event.detail.properties.selected ? 'no longer' : '') + 'selected'
+            );
+        }
+
+        const main = () => {
+            const map = document.querySelector('us-county-select');
+            map.addEventListener('county-selection-changed', changeHandler);
+        }
+
+        document.addEventListener("DOMContentLoaded", main);
+    </script>
 
     <!-- Be sure to give the custom element width and height by hosting in a container: -->
     <style>
@@ -19,20 +40,26 @@
             padding: 0;
         }
 
-        .map-container {
+        #map-container {
             width: 100vw;
-            height: 100vh;
+            height: 80vh;
             overflow: hidden;
             margin: 0;
             padding: 0;
+        }
+
+        #log {
+            white-space: pre-wrap;
         }
     </style>
 </head>
 
 <body>
-    <div class="map-container">
+    <main id="map-container">
         <us-county-select />
-    </div>
+    </main>
+
+    <aside id="log" />
 </body>
 
 </html>
